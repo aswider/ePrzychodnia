@@ -1,4 +1,5 @@
-﻿using ePrzychodnia.Data;
+﻿using ePrzychodnia.Core.Enums;
+using ePrzychodnia.Data;
 using ePrzychodnia.Domain.Implementations;
 using ePrzychodnia.Domain.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -27,11 +28,17 @@ namespace ePrzychodnia.Web
 
             services.AddDbContext<ClinicDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddIdentity<User,IdentityRole>().AddEntityFrameworkStores<ClinicDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+            }
+                ).AddEntityFrameworkStores<ClinicDbContext>().AddDefaultTokenProviders();
 
-           
+            services.AddAuthorization(options => options.AddPolicy("Admin", policy => policy.RequireRole("Admin")));
+            services.AddAuthorization(options => options.AddPolicy("Standard", policy => policy.RequireRole("Standard")));
 
-
+         
             services.AddScoped<IDoctorService,DoctorService>()
                 .AddScoped<IPatientService,PatientService>()
                 .AddScoped<IVisitService,VisitService>()
@@ -56,6 +63,7 @@ namespace ePrzychodnia.Web
 
             app.UseStaticFiles();
             app.UseAuthentication();
+          
 
             app.UseMvc(routes =>
             {

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ePrzychodnia.Data;
 using ePrzychodnia.Core;
+using ePrzychodnia.Core.Enums;
 using ePrzychodnia.Core.ViewModels.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ePrzychodnia.Web.Controllers
 {
@@ -41,9 +44,12 @@ namespace ePrzychodnia.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Login, model.Password, isPersistent: true, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
-                    return RedirectToLocal(returnUrl);
+                   
+                        return RedirectToLocal(returnUrl);
+                  
                 }
                 else
                 {
@@ -79,11 +85,10 @@ namespace ePrzychodnia.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Login, Email = model.Login };
+                var user = new User { UserName = model.Login, Email = model.Login ,Role = Role.Standard};
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToLocal(returnUrl);
                 }
                 AddErrors(result);

@@ -73,7 +73,7 @@ namespace ePrzychodnia.Domain.Implementations
                 Surname = doctor.Surname,
                 Email = doctor.Email,
                 Phone = doctor.Phone,
-                Specialization = Specializations.ResourceManager.GetString(doctor.Specialization.ToString()),
+                Specialization = doctor.Specialization.ToString(),
                 Specializations = GetSpecializations()
             };
         }
@@ -142,6 +142,7 @@ namespace ePrzychodnia.Domain.Implementations
             if (doctor == null)
                 throw new ClinicException(ErrorCodes.ObjectNotFound);
 
+
             return new DetailsDoctorViewModel
             {
                 Id = doctor.Id,
@@ -158,16 +159,13 @@ namespace ePrzychodnia.Domain.Implementations
 
         public List<SelectListItem> GetSpecializations()
         {
-            var specializations = new List<SelectListItem>
-            {
-                new SelectListItem()
-            };
+            var specializations = new List<SelectListItem>();
 
             foreach (var specialization in (Specialization[])Enum.GetValues(typeof(Specialization)))
             {
                 var value = Specializations.ResourceManager.GetString(specialization.ToString());
 
-                specializations.Add(new SelectListItem()
+                specializations.Add(new SelectListItem
                 {
                     Text = value,
                     Value = specialization.ToString()

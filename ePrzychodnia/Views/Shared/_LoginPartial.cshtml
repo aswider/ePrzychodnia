@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ePrzychodnia.Data
+@using Microsoft.AspNetCore.Authorization
 
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
@@ -10,13 +11,22 @@
         <div>
             <div style="float:left; padding-left:20px; padding-top: 15px">
                 <a asp-area="" asp-controller="Home" asp-action="Index">Witaj, @UserManager.GetUserName(User)!</a>
+
             </div>
             <div style="float:left; padding-left:20px; ">
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Wyloguj</button>
             </div>
-            
+
             <ul class="nav navbar-nav">
-                <li><a asp-area="" asp-controller="Doctor" asp-action="Index">Lekarze</a></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a asp-area="" asp-controller="User" asp-action="Index">Użytkownicy</a></li>
+
+                }
+                else
+                {
+                    <li><a asp-area="" asp-controller="Doctor" asp-action="Index">Lekarze</a></li>
+                }
             </ul>
         </div>
     </form>

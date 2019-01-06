@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ePrzychodnia.Core.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace ePrzychodnia.Data
 {
     public class User:IdentityUser
     {
-       public string Login { get; set; }
-        public string Password { get; set; }
+     
+        public Role Role { get; set; }
+
+        public bool IsActive { get; set; }
         
     }
 }

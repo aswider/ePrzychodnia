@@ -16,10 +16,6 @@ namespace ePrzychodnia.Web.Controllers
             _doctorService = doctorService;
         }
 
-      
-
-
-
         [HttpGet]
         public IActionResult Create()
         {
